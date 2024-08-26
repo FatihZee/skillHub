@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const AuthController = require('../controllers/authController');
-const authenticateToken = require('../middlewares/authenticateToken');
+const AuthController = require("../controllers/authController");
+const authenticateToken = require("../middlewares/authenticateToken.js");
 
 /**
  * @swagger
@@ -37,7 +37,7 @@ const authenticateToken = require('../middlewares/authenticateToken');
  *       500:
  *         description: Internal server error
  */
-router.post('/register', AuthController.register);
+router.post("/register", AuthController.register);
 
 /**
  * @swagger
@@ -62,7 +62,7 @@ router.post('/register', AuthController.register);
  *       401:
  *         description: Unauthorized
  */
-router.post('/login', AuthController.login);
+router.post("/login", AuthController.login);
 
 /**
  * @swagger
@@ -78,6 +78,6 @@ router.post('/login', AuthController.login);
  *       500:
  *         description: Internal server error
  */
-router.post('/logout', authenticateToken, AuthController.logout);
+router.post("/logout", authenticateToken, AuthController.logout);
 
 module.exports = router;

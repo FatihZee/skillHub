@@ -21,17 +21,20 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.init(
     {
-      orderId: DataTypes.STRING,    // ID pesanan dari Midtrans
+      orderId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       serviceId: DataTypes.INTEGER,
       buyerId: DataTypes.INTEGER,
       sellerId: DataTypes.INTEGER,
-      priceOption: DataTypes.STRING, // basicPrice, standardPrice, premiumPrice
-      price: DataTypes.FLOAT,        // Harga yang dipilih
+      priceOption: DataTypes.STRING,
+      price: DataTypes.FLOAT,
       status: {
         type: DataTypes.STRING,
-        defaultValue: "pending", // Status pembayaran
+        allowNull: false,
+        defaultValue: "pending",
       },
-      paymentUrl: DataTypes.STRING, // URL pembayaran dari Midtrans
     },
     {
       sequelize,

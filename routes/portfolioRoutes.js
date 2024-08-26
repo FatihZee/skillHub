@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const portfolioController = require('../controllers/portfolioController');
-const authenticateToken = require('../middlewares/authenticateToken');
+const portfolioController = require("../controllers/portfolioController");
+const authenticateToken = require("../middlewares/authenticateToken.js");
 
 /**
  * @swagger
@@ -26,7 +26,7 @@ const authenticateToken = require('../middlewares/authenticateToken');
  *               items:
  *                 $ref: '#/components/schemas/Portfolio'
  */
-router.get('/portfolios', portfolioController.getAllPortfolios);
+router.get("/portfolios", portfolioController.getAllPortfolios);
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ router.get('/portfolios', portfolioController.getAllPortfolios);
  *       404:
  *         description: Portfolio tidak ditemukan.
  */
-router.get('/portfolios/:id', portfolioController.getPortfolioById);
+router.get("/portfolios/:id", portfolioController.getPortfolioById);
 
 /**
  * @swagger
@@ -86,7 +86,11 @@ router.get('/portfolios/:id', portfolioController.getPortfolioById);
  *       500:
  *         description: Terjadi kesalahan saat membuat portfolio.
  */
-router.post('/portfolios', authenticateToken, portfolioController.createPortfolio);
+router.post(
+  "/portfolios",
+  authenticateToken,
+  portfolioController.createPortfolio
+);
 
 /**
  * @swagger
@@ -127,7 +131,11 @@ router.post('/portfolios', authenticateToken, portfolioController.createPortfoli
  *       500:
  *         description: Terjadi kesalahan saat mengupdate portfolio.
  */
-router.put('/portfolios/:id', authenticateToken, portfolioController.updatePortfolio);
+router.put(
+  "/portfolios/:id",
+  authenticateToken,
+  portfolioController.updatePortfolio
+);
 
 /**
  * @swagger
@@ -152,6 +160,10 @@ router.put('/portfolios/:id', authenticateToken, portfolioController.updatePortf
  *       500:
  *         description: Terjadi kesalahan saat menghapus portfolio.
  */
-router.delete('/portfolios/:id', authenticateToken, portfolioController.deletePortfolio);
+router.delete(
+  "/portfolios/:id",
+  authenticateToken,
+  portfolioController.deletePortfolio
+);
 
 module.exports = router;

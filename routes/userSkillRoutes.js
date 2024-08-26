@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userSkillController = require('../controllers/userSkillController');
-const authenticateToken = require('../middlewares/authenticateToken');
+const userSkillController = require("../controllers/userSkillController");
+const authenticateToken = require("../middlewares/authenticateToken.js");
 
 /**
  * @swagger
@@ -33,7 +33,11 @@ const authenticateToken = require('../middlewares/authenticateToken');
  *       500:
  *         description: Terjadi kesalahan
  */
-router.post('/user-skills', authenticateToken, userSkillController.createUserSkill);
+router.post(
+  "/user-skills",
+  authenticateToken,
+  userSkillController.createUserSkill
+);
 
 /**
  * @swagger
@@ -58,6 +62,10 @@ router.post('/user-skills', authenticateToken, userSkillController.createUserSki
  *       500:
  *         description: Terjadi kesalahan
  */
-router.delete('/user-skills/:skillId', authenticateToken, userSkillController.deleteUserSkill);
+router.delete(
+  "/user-skills/:skillId",
+  authenticateToken,
+  userSkillController.deleteUserSkill
+);
 
 module.exports = router;

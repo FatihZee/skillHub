@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const serviceController = require('../controllers/serviceController');
-const authenticateToken = require('../middlewares/authenticateToken');
+const serviceController = require("../controllers/serviceController");
+const authenticateToken = require("../middlewares/authenticateToken.js");
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ const authenticateToken = require('../middlewares/authenticateToken');
  *       500:
  *         description: Terjadi kesalahan
  */
-router.post('/services', authenticateToken, serviceController.createService);
+router.post("/services", authenticateToken, serviceController.createService);
 
 /**
  * @swagger
@@ -59,7 +59,7 @@ router.post('/services', authenticateToken, serviceController.createService);
  *       500:
  *         description: Terjadi kesalahan
  */
-router.get('/services', serviceController.getAllServices);
+router.get("/services", serviceController.getAllServices);
 
 /**
  * @swagger
@@ -84,7 +84,11 @@ router.get('/services', serviceController.getAllServices);
  *       500:
  *         description: Terjadi kesalahan
  */
-router.get('/services/:id', authenticateToken, serviceController.getServiceById);
+router.get(
+  "/services/:id",
+  authenticateToken,
+  serviceController.getServiceById
+);
 
 /**
  * @swagger
@@ -130,7 +134,7 @@ router.get('/services/:id', authenticateToken, serviceController.getServiceById)
  *       500:
  *         description: Terjadi kesalahan
  */
-router.put('/services/:id', authenticateToken, serviceController.updateService);
+router.put("/services/:id", authenticateToken, serviceController.updateService);
 
 /**
  * @swagger
@@ -155,6 +159,10 @@ router.put('/services/:id', authenticateToken, serviceController.updateService);
  *       500:
  *         description: Terjadi kesalahan
  */
-router.delete('/services/:id', authenticateToken, serviceController.deleteService);
+router.delete(
+  "/services/:id",
+  authenticateToken,
+  serviceController.deleteService
+);
 
 module.exports = router;

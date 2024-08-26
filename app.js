@@ -13,7 +13,6 @@ const userSkillRoutes = require('./routes/userSkillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const midtransRoutes = require('./routes/midtransRoutes')
 require('dotenv').config();
 
 // Setup Swagger options
@@ -54,6 +53,7 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 app.use(fileUpload());
@@ -67,7 +67,6 @@ app.use('/api', userSkillRoutes);
 app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', orderRoutes);
-app.use('/api', midtransRoutes);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

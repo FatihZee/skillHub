@@ -13,6 +13,7 @@ const userSkillRoutes = require('./routes/userSkillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const midtransRoutes = require("./routes/midtransRoutes");
 require('dotenv').config();
 
 // Setup Swagger options
@@ -67,6 +68,7 @@ app.use('/api', userSkillRoutes);
 app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', midtransRoutes);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

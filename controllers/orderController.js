@@ -1,64 +1,47 @@
-"use strict";
 const OrderService = require("../services/orderService");
 
 class OrderController {
-  static async createOrder(req, res) {
+  async createOrder(req, res) {
     try {
-      const order = await OrderService.createOrder(req.body, req.user.id);
-      return res.status(201).json({
-        message: "Order created successfully",
-        order: order.order,
-        paymentUrl: order.paymentUrl,
+      const { serviceId, priceOption } = req.body;
+      const buyerId = req.user.id; // Assuming user ID is stored in req.user.id
+
+      const { order, paymentUrl } = await OrderService.createOrder({
+        serviceId,
+        buyerId,
+        priceOption,
+      });
+
+      res.status(201).json({
+        order,
+        paymentUrl,
       });
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
-  static async getOrderById(req, res) {
+  async getOrder(req, res) {
     try {
-      const order = await OrderService.getOrderById(req.params.id);
-      return res.status(200).json(order);
+      const { id } = req.params;
+      const order = await OrderService.getOrderById(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.status(200).json(order);
     } catch (error) {
-      return res.status(404).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 
-  static async getAllOrders(req, res) {
+  async getAllOrders(req, res) {
     try {
       const orders = await OrderService.getAllOrders();
-      return res.status(200).json(orders);
+      res.status(200).json(orders);
     } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
-  }
-
-  static async deleteOrder(req, res) {
-    try {
-      const order = await OrderService.deleteOrder(req.params.id);
-      return res.status(200).json({
-        message: "Order deleted successfully",
-        order,
-      });
-    } catch (error) {
-      return res.status(404).json({ error: error.message });
-    }
-  }
-
-  static async handleMidtransNotification(req, res) {
-    try {
-      const notification = req.body;
-
-      // Log the entire notification body for debugging purposes
-      console.log('Received Midtrans notification:', notification);
-
-      await OrderService.handleMidtransNotification(notification);
-      return res.status(200).json({ message: "Notification processed" });
-    } catch (error) {
-      console.error('Error processing Midtrans notification:', error.message);
-      return res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
 }
 
-module.exports = OrderController;
+module.exports = new OrderController();

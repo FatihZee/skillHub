@@ -15,6 +15,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const midtransRoutes = require("./routes/midtransRoutes");
 require('dotenv').config();
+const localtunnel = require('localtunnel');  // Tambahkan ini
 
 // Setup Swagger options
 const swaggerOptions = {
@@ -70,8 +71,19 @@ app.use('/api', serviceRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', midtransRoutes);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+const port = 3000;
+app.listen(port, async () => {
+  console.log(`Server is running on port ${port}`);
+
+  // Set up LocalTunnel
+  const tunnel = await localtunnel({ port: port, subdomain: 'skillhub-esdlaboratory' });
+  
+  console.log(`LocalTunnel is running at ${tunnel.url}`);
+
+  // Optional: close the tunnel when the process is terminated
+  tunnel.on('close', () => {
+    console.log('LocalTunnel closed');
+  });
 });
 
 module.exports = app;

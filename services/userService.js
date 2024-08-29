@@ -1,4 +1,4 @@
-const { User, Skill, Portfolio, Service } = require("../models");
+const { User, Skill, Portfolio, Service, Rating, sequelize } = require('../models');
 const { hashPassword } = require("../helpers/bcrypt");
 
 class UserService {
@@ -17,6 +17,18 @@ class UserService {
 
   static async getUserById(id) {
     return await User.findByPk(id, {
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+              SELECT AVG(ratingValue)
+              FROM Ratings
+              WHERE userId = User.id
+            )`),
+            'averageRating'
+          ]
+        ]
+      },
       include: [
         {
           model: Skill,
@@ -27,12 +39,12 @@ class UserService {
         {
           model: Portfolio,
           as: 'portfolios',
-          attributes: ['id', 'image', 'description', 'createdAt', 'updatedAt']
+          attributes: ['id', 'image', 'description']
         },
         {
           model: Service,
           as: 'services',
-          attributes: ['id', 'title', 'description', 'isAvailable', 'skillId', 'createdAt', 'updatedAt', 'basicPrice', 'standardPrice', 'premiumPrice'],
+          attributes: ['id', 'title', 'description', 'isAvailable', 'skillId', 'basicPrice', 'standardPrice', 'premiumPrice'],
           include: [
             {
               model: Skill,
@@ -40,13 +52,31 @@ class UserService {
               attributes: ['id', 'name']
             }
           ]
+        },
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'ratingValue', 'comment']
         }
-      ]
+      ],
+      order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending
     });
   }
 
   static async getAllUsers() {
     return await User.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+              SELECT AVG(ratingValue)
+              FROM Ratings
+              WHERE userId = User.id
+            )`),
+            'averageRating'
+          ]
+        ]
+      },
       include: [
         {
           model: Skill,
@@ -57,12 +87,12 @@ class UserService {
         {
           model: Portfolio,
           as: 'portfolios',
-          attributes: ['id', 'image', 'description', 'createdAt', 'updatedAt']
+          attributes: ['id', 'image', 'description']
         },
         {
           model: Service,
           as: 'services',
-          attributes: ['id', 'title', 'description', 'isAvailable', 'skillId', 'createdAt', 'updatedAt', 'basicPrice', 'standardPrice', 'premiumPrice'],
+          attributes: ['id', 'title', 'description', 'isAvailable', 'skillId', 'basicPrice', 'standardPrice', 'premiumPrice'],
           include: [
             {
               model: Skill,
@@ -70,8 +100,14 @@ class UserService {
               attributes: ['id', 'name']
             }
           ]
+        },
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'ratingValue', 'comment']
         }
-      ]
+      ],
+      order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending
     });
   }
 

@@ -4,7 +4,6 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Define association here
       User.hasMany(models.Portfolio, {
         foreignKey: "userId",
         as: "portfolios",
@@ -21,15 +20,20 @@ module.exports = (sequelize, DataTypes) => {
         as: "services",
       });
 
-      // Relasi dengan Order
       User.hasMany(models.Order, {
         foreignKey: "buyerId",
-        as: "purchases", // Orders where the user is the buyer
+        as: "purchases",
       });
 
       User.hasMany(models.Order, {
         foreignKey: "sellerId",
-        as: "sales", // Orders where the user is the seller
+        as: "sales",
+      });
+
+      // Relasi dengan Rating
+      User.hasMany(models.Rating, {
+        foreignKey: "userId",
+        as: "ratings",
       });
     }
   }

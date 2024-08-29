@@ -12,15 +12,19 @@ class OrderService {
     }
 
     let price;
+    let priceColumn;
     switch (priceOption) {
       case "basic":
         price = service.basicPrice;
+        priceColumn = "basicPrice"; // Mengisi priceOption dengan nama kolom
         break;
       case "standard":
         price = service.standardPrice;
+        priceColumn = "standardPrice"; // Mengisi priceOption dengan nama kolom
         break;
       case "premium":
         price = service.premiumPrice;
+        priceColumn = "premiumPrice"; // Mengisi priceOption dengan nama kolom
         break;
       default:
         throw new Error("Invalid price option");
@@ -31,7 +35,7 @@ class OrderService {
       serviceId,
       buyerId,
       sellerId: service.userId, // Seller ID from the service
-      priceOption,
+      priceOption: priceColumn, // Menyimpan nama kolom harga
       price,
     });
 

@@ -7,7 +7,7 @@ const authenticateToken = require("../middlewares/authenticateToken.js");
  * @swagger
  * tags:
  *  name: Auth
- *  description: API for authentication
+ *  description: API untuk pengelolaan autentikasi
  */
 
 /**

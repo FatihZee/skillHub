@@ -14,6 +14,7 @@ const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const midtransRoutes = require("./routes/midtransRoutes");
+const ratingService = require("./routes/RatingRoutes")
 require('dotenv').config();
 const localtunnel = require('localtunnel');  // Tambahkan ini
 
@@ -22,13 +23,13 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Documentation',
+      title: 'API Documentation for SkillHub Application',
       version: '1.0.0',
-      description: 'Documentation for your API endpoints',
+      description: 'Dokumentasi untuk endpoint API dari aplikasi SkillHub. Aplikasi ini mencakup berbagai fitur, termasuk manajemen pengguna, portofolio, keterampilan, layanan, dan pesanan. Dokumentasi ini bertujuan untuk mempermudah pengembang dalam memahami dan menggunakan API yang disediakan.',
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url: 'https://skillhub-esdlaboratory.loca.lt/api',
         description: 'Development server',
       },
     ],
@@ -70,6 +71,7 @@ app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', midtransRoutes);
+app.use('/api', ratingService);
 
 const port = 3000;
 app.listen(port, async () => {

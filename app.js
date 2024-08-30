@@ -14,7 +14,9 @@ const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const midtransRoutes = require("./routes/midtransRoutes");
-const ratingService = require("./routes/RatingRoutes")
+const RatingRoutes = require("./routes/RatingRoutes")
+const bankAccountRoutes = require("./routes/bankAccountRoutes")
+const bankRoutes = require("./routes/bankRoutes")
 require('dotenv').config();
 const localtunnel = require('localtunnel');  // Tambahkan ini
 
@@ -71,7 +73,9 @@ app.use('/api', authRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', midtransRoutes);
-app.use('/api', ratingService);
+app.use('/api', RatingRoutes);
+app.use('/api', bankRoutes);
+app.use('/api', bankAccountRoutes);
 
 const port = 3000;
 app.listen(port, async () => {

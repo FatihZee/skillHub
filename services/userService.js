@@ -1,4 +1,4 @@
-const { User, Skill, Portfolio, Service, Rating, sequelize } = require('../models');
+const { User, Skill, Portfolio, Service, Rating, BankAccount, Banks, sequelize } = require('../models');
 const { hashPassword } = require("../helpers/bcrypt");
 
 class UserService {
@@ -57,6 +57,18 @@ class UserService {
           model: Rating,
           as: 'ratings',
           attributes: ['id', 'ratingValue', 'comment']
+        },
+        {
+          model: BankAccount,
+          as: 'bankAccounts',
+          attributes: ['id', 'accountNumber'],
+          include: [
+            {
+              model: Banks,
+              as: 'bank',
+              attributes: ['id', 'nama', 'kode']
+            }
+          ]
         }
       ],
       order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending
@@ -105,6 +117,18 @@ class UserService {
           model: Rating,
           as: 'ratings',
           attributes: ['id', 'ratingValue', 'comment']
+        },
+        {
+          model: BankAccount,
+          as: 'bankAccounts',
+          attributes: ['id', 'accountNumber'],
+          include: [
+            {
+              model: Banks,
+              as: 'bank',
+              attributes: ['id', 'nama', 'kode']
+            }
+          ]
         }
       ],
       order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending

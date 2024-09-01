@@ -1,7 +1,6 @@
 const UserService = require('../services/userService');
 const path = require('path');
 const fs = require('fs');
-const { hashPassword } = require('../helpers/bcrypt');
 
 // Format nama file gambar
 const formatImageName = (name, suffix, id) => {
@@ -15,11 +14,10 @@ module.exports = {
       const { name, email, password, phone } = req.body;
 
       // Buat user terlebih dahulu untuk mendapatkan ID
-      const hashedPassword = await hashPassword(password);
       const user = await UserService.createUser({
         name,
         email,
-        password: hashedPassword,
+        password,
         phone,
       });
 
@@ -96,7 +94,7 @@ module.exports = {
         await profileImage.mv(profileImageSavePath);
 
         // Remove old profile image
-        if (existingUser.profileImage) {
+        if (existingUser.profileImage && existingUser.profileImage !== profileImagePath) {
           const oldProfileImagePath = path.join(__dirname, '../', existingUser.profileImage.replace('/uploads/', ''));
           if (fs.existsSync(oldProfileImagePath)) {
             fs.unlinkSync(oldProfileImagePath);
@@ -111,7 +109,7 @@ module.exports = {
         await coverImage.mv(coverImageSavePath);
 
         // Remove old cover image
-        if (existingUser.coverImage) {
+        if (existingUser.coverImage && existingUser.coverImage !== coverImagePath) {
           const oldCoverImagePath = path.join(__dirname, '../', existingUser.coverImage.replace('/uploads/', ''));
           if (fs.existsSync(oldCoverImagePath)) {
             fs.unlinkSync(oldCoverImagePath);
@@ -119,22 +117,17 @@ module.exports = {
         }
       }
 
-      // Update user with hashed password if provided
-      const updateData = {
+      // Update the user data
+      const updatedUser = await UserService.updateUser(req.params.id, {
         name,
         email,
-        password: password ? await hashPassword(password) : existingUser.password,
+        password,
         phone,
         profileImage: profileImagePath,
-        coverImage: coverImagePath
-      };
+        coverImage: coverImagePath,
+      });
 
-      const updatedUser = await UserService.updateUser(req.params.id, updateData);
-      if (updatedUser) {
-        res.json(updatedUser);
-      } else {
-        res.status(404).send('User not found');
-      }
+      res.json(updatedUser);
     } catch (error) {
       res.status(500).send(error.message);
     }
@@ -143,29 +136,34 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const user = await UserService.getUserById(req.params.id);
-      if (user) {
-        // Delete profile and cover images if they exist
-        if (user.profileImage) {
-          const profileImagePath = path.join(__dirname, '../', user.profileImage.replace('/uploads/', ''));
-          if (fs.existsSync(profileImagePath)) {
-            fs.unlinkSync(profileImagePath);
-          }
-        }
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
 
-        if (user.coverImage) {
-          const coverImagePath = path.join(__dirname, '../', user.coverImage.replace('/uploads/', ''));
-          if (fs.existsSync(coverImagePath)) {
-            fs.unlinkSync(coverImagePath);
-          }
+      // Remove associated images
+      if (user.profileImage) {
+        const profileImagePath = path.join(__dirname, '../', user.profileImage.replace('/uploads/', ''));
+        if (fs.existsSync(profileImagePath)) {
+          fs.unlinkSync(profileImagePath);
         }
+      }
 
-        await UserService.deleteUser(req.params.id);
-        res.status(204).send(); // No content
+      if (user.coverImage) {
+        const coverImagePath = path.join(__dirname, '../', user.coverImage.replace('/uploads/', ''));
+        if (fs.existsSync(coverImagePath)) {
+          fs.unlinkSync(coverImagePath);
+        }
+      }
+
+      // Delete the user
+      const isDeleted = await UserService.deleteUser(req.params.id);
+      if (isDeleted) {
+        res.status(204).send('User deleted successfully');
       } else {
-        res.status(404).send('User not found');
+        res.status(500).send('Failed to delete user');
       }
     } catch (error) {
       res.status(500).send(error.message);
     }
-  }
+  },
 };

@@ -1,4 +1,4 @@
-const { User, Skill, Portfolio, Service, Rating, BankAccount, Banks, sequelize } = require('../models');
+const { User, Skill, Portfolio, Service, Rating, BankAccount, Banks, SkillSwap, sequelize } = require('../models');
 const { hashPassword } = require("../helpers/bcrypt");
 
 class UserService {
@@ -69,9 +69,29 @@ class UserService {
               attributes: ['id', 'nama', 'kode']
             }
           ]
+        },
+        {
+          model: SkillSwap,
+          as: 'offerings',
+          attributes: ['id', 'offeredSkillId', 'description', 'status'],
+          include: [
+            { model: Skill, as: 'offeredSkill', attributes: ['id', 'name'] }
+          ],
+          where: { offeringUserId: id },
+          required: false,
+        },
+        {
+          model: SkillSwap,
+          as: 'requests',
+          attributes: ['id', 'offeredSkillId', 'description', 'status'],
+          include: [
+            { model: Skill, as: 'offeredSkill', attributes: ['id', 'name'] }
+          ],
+          where: { requestingUserId: id },
+          required: false,
         }
       ],
-      order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending
+      order: [[sequelize.col('createdAt'), 'ASC']]
     });
   }
 
@@ -129,19 +149,42 @@ class UserService {
               attributes: ['id', 'nama', 'kode']
             }
           ]
+        },
+        {
+          model: SkillSwap,
+          as: 'offerings',
+          attributes: ['id', 'offeredSkillId', 'description', 'status'],
+          include: [
+            { model: Skill, as: 'offeredSkill', attributes: ['id', 'name'] }
+          ],
+          required: false
+        },
+        {
+          model: SkillSwap,
+          as: 'requests',
+          attributes: ['id', 'offeredSkillId', 'description', 'status'],
+          include: [
+            { model: Skill, as: 'offeredSkill', attributes: ['id', 'name'] }
+          ],
+          required: false
         }
       ],
-      order: [[sequelize.col('createdAt'), 'ASC']] // Mengurutkan berdasarkan createdAt secara ascending
+      order: [[sequelize.col('createdAt'), 'ASC']]
     });
   }
 
   static async updateUser(id, updateData) {
     const user = await User.findByPk(id);
     if (user) {
+      // Jika ada password baru, hash password tersebut sebelum melakukan update
+      if (updateData.password) {
+        updateData.password = await hashPassword(updateData.password);
+      }
       return await user.update(updateData);
     }
     return null;
   }
+  
 
   static async deleteUser(id) {
     const user = await User.findByPk(id);

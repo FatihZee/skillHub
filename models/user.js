@@ -30,10 +30,24 @@ module.exports = (sequelize, DataTypes) => {
         as: "sales",
       });
 
-      // Relasi dengan Rating
       User.hasMany(models.Rating, {
         foreignKey: "userId",
         as: "ratings",
+      });
+
+      User.hasMany(models.BankAccount, {
+        foreignKey: 'userId',
+        as: 'bankAccounts'
+      });
+
+      User.hasMany(models.SkillSwap, {
+        foreignKey: "offeringUserId",
+        as: "offerings",
+      });
+
+      User.hasMany(models.SkillSwap, {
+        foreignKey: "requestingUserId",
+        as: "requests",
       });
     }
   }

@@ -18,7 +18,7 @@ class MidtransController {
       // Handle the notification based on the status
       const orderId = notification.order_id;
       const transactionStatus = notification.transaction_status;
-      const order = await Order.findByPk(orderId);
+      const order = await Order.findOne({ where: { orderId } });
 
       if (!order) {
         console.log("Order not found");

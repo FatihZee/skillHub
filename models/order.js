@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.init(
     {
+      orderId: DataTypes.STRING, // ID unik untuk order
       serviceId: {
         type: DataTypes.INTEGER,
         references: {

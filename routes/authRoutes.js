@@ -12,7 +12,7 @@ const authenticateToken = require("../middlewares/authenticateToken.js");
 
 /**
  * @swagger
- * /api/register:
+ * /register:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -41,7 +41,7 @@ router.post("/register", AuthController.register);
 
 /**
  * @swagger
- * /api/login:
+ * /login:
  *   post:
  *     summary: Login a user
  *     tags: [Auth]
@@ -66,7 +66,7 @@ router.post("/login", AuthController.login);
 
 /**
  * @swagger
- * /api/logout:
+ * /logout:
  *   post:
  *     summary: Logout a user
  *     tags: [Auth]

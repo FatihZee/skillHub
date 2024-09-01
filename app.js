@@ -17,6 +17,7 @@ const midtransRoutes = require("./routes/midtransRoutes");
 const RatingRoutes = require("./routes/RatingRoutes")
 const bankAccountRoutes = require("./routes/bankAccountRoutes")
 const bankRoutes = require("./routes/bankRoutes")
+const skillSwapRoutes = require("./routes/skillSwapRoutes")
 require('dotenv').config();
 const localtunnel = require('localtunnel');  // Tambahkan ini
 
@@ -76,6 +77,7 @@ app.use('/api', midtransRoutes);
 app.use('/api', RatingRoutes);
 app.use('/api', bankRoutes);
 app.use('/api', bankAccountRoutes);
+app.use('/api', skillSwapRoutes);
 
 const port = 3000;
 app.listen(port, async () => {

@@ -2,8 +2,8 @@ const { Portfolio, User } = require('../models');
 
 class PortfolioService {
   static async createPortfolio(image, description, userId) {
-    // Tambahkan validasi jika diperlukan sebelum membuat portfolio
-    return Portfolio.create({ image, description, userId });
+    const imagePath = image ? `/uploads/${image}` : null;
+    return Portfolio.create({ image: imagePath, description, userId });
   }
 
   static async getPortfolioById(id) {
@@ -31,7 +31,8 @@ class PortfolioService {
     if (!portfolio) {
       throw new Error('Portfolio not found');
     }
-    return portfolio.update({ description, userId, image });
+    const imagePath = image ? `/uploads/${image}` : portfolio.image;
+    return portfolio.update({ description, userId, image: imagePath });
   }
 
   static async deletePortfolio(id) {

@@ -19,7 +19,7 @@ module.exports = {
       if (portfolio) {
         res.json(portfolio);
       } else {
-        res.status(404).send({ message: 'Portfolio not found' });
+        res.status(404).send({ message: 'Portfolio tidak ditemukan' });
       }
     } catch (error) {
       res.status(500).send({ message: error.message });
@@ -29,18 +29,22 @@ module.exports = {
   async createPortfolio(req, res) {
     try {
       const { description } = req.body;
-      const userId = req.user.id; // Ambil userId dari token
+      const userId = req.user.id;
   
       const user = await User.findByPk(userId);
       if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+        return res.status(404).send({ message: 'Pengguna tidak ditemukan' });
       }
   
-      let imageName = null;
+      let imageName = 'default_image.jpg'; // Ganti dengan nama gambar default jika tidak ada gambar
   
+      // Pertama, buat portfolio dengan nama gambar default
+      const portfolio = await PortfolioService.createPortfolio(imageName, description, userId);
+  
+      // Jika ada gambar yang diunggah
       if (req.files && req.files.image) {
         const userNameFormatted = user.name.replace(/\s+/g, '_');
-        imageName = `${userNameFormatted}_portfolio.jpg`;
+        imageName = `${userNameFormatted}_portfolio_ID${portfolio.id}.jpg`;
         const imagePath = path.join(__dirname, '../uploads', imageName);
   
         req.files.image.mv(imagePath, (err) => {
@@ -48,53 +52,61 @@ module.exports = {
             return res.status(500).send(err);
           }
         });
+  
+        // Perbarui portfolio dengan nama gambar yang baru
+        await PortfolioService.updatePortfolio(portfolio.id, description, userId, imageName);
       }
   
-      const portfolio = await PortfolioService.createPortfolio(imageName, description, userId);
-      res.status(201).json(portfolio);
+      // Ambil portfolio yang sudah diperbarui dengan nama gambar
+      const updatedPortfolio = await PortfolioService.getPortfolioById(portfolio.id);
+      res.status(201).json(updatedPortfolio);
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
   },
-  
+
   async updatePortfolio(req, res) {
     try {
       const { description } = req.body;
-      const userId = req.user.id; // Ambil userId dari token
-
+      const userId = req.user.id;
+  
       const portfolio = await PortfolioService.getPortfolioById(req.params.id);
       if (!portfolio) {
-        return res.status(404).send({ message: 'Portfolio not found' });
+        return res.status(404).send({ message: 'Portfolio tidak ditemukan' });
       }
-
+  
       const user = await User.findByPk(userId);
       if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+        return res.status(404).send({ message: 'Pengguna tidak ditemukan' });
       }
-
+  
       let updatedData = { description, userId };
-      let imageName = portfolio.image;
-
+      let imageName = portfolio.image || 'default_image.jpg'; // Ganti dengan nama gambar default jika tidak ada gambar
+  
       if (req.files && req.files.image) {
         const userNameFormatted = user.name.replace(/\s+/g, '_');
-        imageName = `${userNameFormatted}_portfolio.jpg`;
+        imageName = `${userNameFormatted}_portfolio_ID${portfolio.id}.jpg`;
         const newImagePath = path.join(__dirname, '../uploads', imageName);
-
-        if (portfolio.image) {
-          const oldImagePath = path.join(__dirname, '../uploads', portfolio.image);
+  
+        // Hapus gambar lama jika ada
+        if (portfolio.image && portfolio.image !== 'default_image.jpg') {
+          const oldImagePath = path.join(__dirname, '../uploads', portfolio.image.replace('/uploads/', ''));
           if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath); // Hapus gambar lama
+            fs.unlinkSync(oldImagePath);
           }
         }
-
+  
         req.files.image.mv(newImagePath, (err) => {
           if (err) {
             return res.status(500).send(err);
           }
         });
         updatedData.image = imageName;
+      } else {
+        // Jika tidak ada gambar baru, gunakan gambar lama atau default
+        updatedData.image = imageName;
       }
-
+  
       const updatedPortfolio = await PortfolioService.updatePortfolio(req.params.id, updatedData.description, updatedData.userId, updatedData.image);
       res.json(updatedPortfolio);
     } catch (error) {
@@ -106,7 +118,7 @@ module.exports = {
     try {
       const portfolio = await PortfolioService.getPortfolioById(req.params.id);
       if (!portfolio) {
-        return res.status(404).send({ message: 'Portfolio not found' });
+        return res.status(404).send({ message: 'Portfolio tidak ditemukan' });
       }
 
       if (portfolio.image) {

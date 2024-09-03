@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../models'); // Pastikan ini sesuai dengan struktur proyek Anda
 require('dotenv').config();
 
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -11,14 +12,22 @@ function authenticateToken(req, res, next) {
     return res.status(403).json({ message: 'Token required' });
   }
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    
+    // Cari user di database berdasarkan ID dari token
+    const user = await User.findByPk(decoded.id);
+    
+    if (!user) {
+      return res.status(403).json({ message: 'User not found' });
     }
 
+    // Menyimpan user yang terautentikasi ke dalam req.user
     req.user = user;
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ message: 'Invalid token' });
+  }
 }
 
 module.exports = authenticateToken;

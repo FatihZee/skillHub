@@ -1,4 +1,6 @@
 const { Service } = require('../models');
+const fs = require('fs');
+const path = require('path');
 
 class ServiceService {
   static async createService({ title, description, isAvailable, skillId, userId, basicPrice, standardPrice, premiumPrice, image }) {
@@ -23,10 +25,12 @@ class ServiceService {
     const service = await Service.findByPk(id);
     if (service) {
       // Jika ada gambar baru, hapus gambar lama
-      if (imagePath && service.image) {
-        const oldImagePath = path.join(__dirname, '../uploads', service.image);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath); // Hapus gambar lama
+      if (imagePath) {
+        if (service.image) {
+          const oldImagePath = path.join(__dirname, '../uploads', path.basename(service.image));
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath); // Hapus gambar lama
+          }
         }
         updateData.image = imagePath; // Update dengan gambar baru
       }
@@ -34,14 +38,14 @@ class ServiceService {
       return service;
     }
     return null;
-  }
+  }  
 
   static async deleteService(id) {
     const service = await Service.findByPk(id);
     if (service) {
       // Hapus gambar terkait
       if (service.image) {
-        const imagePath = path.join(__dirname, '../uploads', service.image);
+        const imagePath = path.join(__dirname, '../uploads', path.basename(service.image));
         if (fs.existsSync(imagePath)) {
           fs.unlinkSync(imagePath); // Hapus gambar
         }

@@ -68,44 +68,66 @@ module.exports = {
       const { title, description, isAvailable, skillId, basicPrice, standardPrice, premiumPrice } = req.body;
       const userId = req.user.id; // Ambil userId dari token
       const image = req.files ? req.files.image : null; // Dapatkan file gambar dari request
-
+  
       // Verifikasi apakah skillId valid
       const skill = await Skill.findByPk(skillId);
       if (!skill) {
         return res.status(404).send('Skill not found');
       }
-
+  
       const service = await ServiceService.getServiceById(req.params.id);
       if (!service) {
         return res.status(404).send('Service not found');
       }
-
+  
+      // Variabel untuk menyimpan path gambar baru
+      let newImagePath = null;
+  
       if (image) {
         // Hapus gambar lama jika ada
         if (service.image) {
-          const oldImagePath = path.join(__dirname, '../uploads', service.image.replace('/uploads/', ''));
+          const oldImagePath = path.join(__dirname, '../uploads', path.basename(service.image));
+          console.log('Hapus gambar lama di:', oldImagePath);
           if (fs.existsSync(oldImagePath)) {
             fs.unlinkSync(oldImagePath);
           }
         }
-
+  
         // Format nama gambar baru dan simpan ke folder uploads
         const imageName = formatImageName(title, service.id);
-        const imagePath = path.join(__dirname, '../uploads', imageName);
-        await image.mv(imagePath);
-
+        newImagePath = path.join(__dirname, '../uploads', imageName);
+        await image.mv(newImagePath);
+  
         // Update service dengan path gambar baru
-        await service.update({ title, description, isAvailable, skillId, basicPrice, standardPrice, premiumPrice, image: `/uploads/${imageName}` });
+        await service.update({
+          title,
+          description,
+          isAvailable,
+          skillId,
+          basicPrice,
+          standardPrice,
+          premiumPrice,
+          image: `/uploads/${imageName}`
+        });
       } else {
         // Update service tanpa mengganti gambar
-        await service.update({ title, description, isAvailable, skillId, basicPrice, standardPrice, premiumPrice });
+        await service.update({
+          title,
+          description,
+          isAvailable,
+          skillId,
+          basicPrice,
+          standardPrice,
+          premiumPrice
+        });
       }
-
+  
       res.json(service);
     } catch (error) {
       res.status(500).send(error.message);
     }
-  },
+  }
+  ,
 
   async deleteService(req, res) {
     try {

@@ -1,22 +1,21 @@
-const mysql = require('mysql');
+const { Sequelize } = require('sequelize');
 
-const connection = mysql.createConnection({
+const sequelize = new Sequelize('skillhub', 'root', '', {
     host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'skillhub'
+    dialect: 'mysql',
+    dialectModule: require('mysql2'),
 });
 
-function connect() {
-    connection.connect((err) => {
-        if (err) {
-            console.error('Error connecting to the database: ' + err.stack);
-            return;
-        }
+async function connect() {
+    try {
+        await sequelize.authenticate();
         console.log('Connected to the database!');
-    });
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
 }
 
 module.exports = {
-    connect
+    connect,
+    sequelize,
 };

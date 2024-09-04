@@ -14,13 +14,12 @@ const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const midtransRoutes = require("./routes/midtransRoutes");
-const RatingRoutes = require("./routes/RatingRoutes")
-const bankAccountRoutes = require("./routes/bankAccountRoutes")
-const bankRoutes = require("./routes/bankRoutes")
-const skillSwapRoutes = require("./routes/skillSwapRoutes")
+const RatingRoutes = require("./routes/RatingRoutes");
+const bankAccountRoutes = require("./routes/bankAccountRoutes");
+const bankRoutes = require("./routes/bankRoutes");
+const skillSwapRoutes = require("./routes/skillSwapRoutes");
 const waRoutes = require('./routes/waRoutes');
 require('dotenv').config();
-const localtunnel = require('localtunnel');  // Tambahkan ini
 
 // Setup Swagger options
 const swaggerOptions = {
@@ -33,7 +32,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://skillhub-esdlaboratory.loca.lt/api',
+        url: 'http://localhost:3000/api', // Ubah URL untuk pengembangan lokal
         description: 'Development server',
       },
     ],
@@ -82,18 +81,8 @@ app.use('/api', skillSwapRoutes);
 app.use('/api', waRoutes);
 
 const port = 3000;
-app.listen(port, async () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-
-  // Set up LocalTunnel
-  const tunnel = await localtunnel({ port: port, subdomain: 'skillhub-esdlaboratory' });
-  
-  console.log(`LocalTunnel is running at ${tunnel.url}`);
-
-  // Optional: close the tunnel when the process is terminated
-  tunnel.on('close', () => {
-    console.log('LocalTunnel closed');
-  });
 });
 
 module.exports = app;

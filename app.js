@@ -13,11 +13,11 @@ const userSkillRoutes = require('./routes/userSkillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const midtransRoutes = require("./routes/midtransRoutes");
-const RatingRoutes = require("./routes/RatingRoutes");
-const bankAccountRoutes = require("./routes/bankAccountRoutes");
-const bankRoutes = require("./routes/bankRoutes");
-const skillSwapRoutes = require("./routes/skillSwapRoutes");
+const midtransRoutes = require('./routes/midtransRoutes');
+const RatingRoutes = require('./routes/RatingRoutes');
+const bankAccountRoutes = require('./routes/bankAccountRoutes');
+const bankRoutes = require('./routes/bankRoutes');
+const skillSwapRoutes = require('./routes/skillSwapRoutes');
 const waRoutes = require('./routes/waRoutes');
 require('dotenv').config();
 
@@ -58,7 +58,15 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(cors());
+const corsOptions = {
+  origin: '*', // Mengizinkan semua origin
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Jika kamu perlu mengirim cookie atau autentikasi berbasis sesi
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(bodyParser.json()); // For parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded

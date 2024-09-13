@@ -44,6 +44,9 @@ class AuthService {
         expiresIn: '1h',
       });
 
+      // Tambahkan log email setelah login berhasil
+      console.log(`Login ke ${user.email} berhasil`);
+
       return { user, token };
     } catch (error) {
       console.error('Error saat login:', error.message);

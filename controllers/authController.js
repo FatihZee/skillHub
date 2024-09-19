@@ -4,8 +4,10 @@ module.exports = {
   async register(req, res) {
     try {
       const { name, email, password, phone } = req.body;
-      const newUser = await AuthService.register(name, email, password, phone);
-      res.status(201).json(newUser);
+      const { newUser, token } = await AuthService.register(name, email, password, phone);
+      
+      // Kembalikan token dan user setelah registrasi
+      res.status(201).json({ message: 'Registrasi berhasil', token, user: newUser });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

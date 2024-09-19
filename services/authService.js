@@ -17,7 +17,13 @@ class AuthService {
         phone,
       });
 
-      return newUser;
+      // Buat token setelah registrasi berhasil
+      const token = jwt.sign({ id: newUser.id, email: newUser.email }, SECRET_KEY, {
+        expiresIn: '1h',
+      });
+
+      // Kembalikan user dan token sebagai response
+      return { newUser, token };
     } catch (error) {
       console.error('Error saat registrasi:', error.message);
       throw error;

@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const authenticateToken = require("../middlewares/authenticateToken");
 
 /**
  * @swagger
@@ -45,7 +46,7 @@ router.get('/users', userController.getAllUsers);
  *       500:
  *         description: Terjadi kesalahan
  */
-router.get('/users/:id', userController.getUserById);
+router.get('/users/:id',authenticateToken, userController.getUserById);
 
 /**
  * @swagger

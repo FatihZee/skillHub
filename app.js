@@ -21,6 +21,14 @@ const skillSwapRoutes = require("./routes/skillSwapRoutes");
 const waRoutes = require("./routes/waRoutes");
 require("dotenv").config();
 
+// Middleware untuk menambahkan header Access-Control-Allow-Origin secara manual
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 // Setup Swagger options
 const swaggerOptions = {
   definition: {
@@ -33,7 +41,7 @@ const swaggerOptions = {
       Contoh penggunaan API:
       1. **GET** semua pengguna: \`https://skillhub-esdlaboratory.loca.lt/api/users\`
       2. **GET** semua layanan: \`https://skillhub-esdlaboratory.loca.lt/api/services\`
-      3. **GET** semua portofolio: \`https://skillhub-esdlaboratory.loca.lt/api/portfolio\`
+      3. **GET** semua portofolio: \`https://skillhub-esdlaboratory.loca.lt/api/portfolios\`
       `,
     },
     servers: [

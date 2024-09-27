@@ -3,12 +3,12 @@
 ## Nama Tim: NgikutHub
 
 ### Anggota Tim:
-- Hana Kamila Naura Yasmin
-- Tiara Sabrina
-- Francisca Isabella Manope
-- Fatih Fikry Oktavianto
-- Mohammad Fahri Eka Pramudya
-- Tirza Dwi Ningrum
+- Hana Kamila Naura Yasmin ( Technopreneur )
+- Tiara Sabrina ( Frontend Developer )
+- Francisca Isabella Manope ( Frontend Developer )
+- Fatih Fikry Oktavianto ( Backend Developer )
+- Mohammad Fahri Eka Pramudya ( UIUX )
+- Tirza Dwi Ningrum ( UIUX )
 
 ---
 

@@ -26,7 +26,7 @@ require("dotenv").config();
 const { connect } = require('./config/database');
 
 // Panggil fungsi connect untuk menghubungkan ke database
-connect();
+connect(); // Menghubungkan ke database Filess.io
 
 // Middleware untuk menambahkan header Access-Control-Allow-Origin secara manual
 app.use((req, res, next) => {

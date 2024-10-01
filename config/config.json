@@ -1,23 +1,26 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "skillhub",
-    "host": "127.0.0.1",
+    "username": "skillHub_difficulty",
+    "password": "8a11618a53d22819efcd993fed4a6e5cfab4489e",
+    "database": "skillHub_difficulty",
+    "host": "5xe.h.filess.io",
+    "port": 3307,
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": "",
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "skillHub_difficulty",
+    "password": "8a11618a53d22819efcd993fed4a6e5cfab4489e",
+    "database": "skillHub_difficulty",
+    "host": "5xe.h.filess.io",
+    "port": 3307,
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "",
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "skillHub_difficulty",
+    "password": "8a11618a53d22819efcd993fed4a6e5cfab4489e",
+    "database": "skillHub_difficulty",
+    "host": "5xe.h.filess.io",
+    "port": 3307,
     "dialect": "mysql"
   }
 }

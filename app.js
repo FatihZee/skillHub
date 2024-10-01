@@ -1,3 +1,4 @@
+// app.js
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -20,6 +21,12 @@ const bankRoutes = require("./routes/bankRoutes");
 const skillSwapRoutes = require("./routes/skillSwapRoutes");
 const waRoutes = require("./routes/waRoutes");
 require("dotenv").config();
+
+// Import koneksi database
+const { connect } = require('./config/database');
+
+// Panggil fungsi connect untuk menghubungkan ke database
+connect();
 
 // Middleware untuk menambahkan header Access-Control-Allow-Origin secara manual
 app.use((req, res, next) => {
